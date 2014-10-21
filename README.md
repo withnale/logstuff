@@ -31,31 +31,31 @@ The example IRB session below shows examples of the usage of LogStuff and the as
    # Simple basic logging message
    2.1.2 :002 > LogStuff.info { "Test message" }
    {"@source":"logstuff","@tags":[],"@fields":{},"@severity":"info","message":"Test message","@timestamp":"2014-10-20T08:41:36.950904+00:00"}
-    => 139
+    => true
 
    # Basic logging with additional tags for categorising messages
    2.1.2 :004 > LogStuff.info(:mail,:deliver) { "Test message" }
    {"@source":"logstuff","@tags":["mail","deliver"],"@fields":{},"@severity":"info","message":"Test message","@timestamp":"2014-10-20T08:42:07.589854+00:00"}
-    => 155
+    => true
 
    # Basic logging with additional key/value pairs specified for inclusion in the @fields structure
    2.1.2 :008 > LogStuff.info(:key1 => '1234', :key2 => '5678') { "Test message" }
    {"@source":"logstuff","@tags":[],"@fields":{"key1":"1234","key2":"5678"},"@severity":"info","message":"Test message","@timestamp":"2014-10-20T08:43:04.035798+00:00"}
-    => 166
+    => true
 
    # Using with tag method allows all log messages within the block to inherit those tags
    2.1.2 :009 > LogStuff.tag(:tag1) do
    2.1.2 :010 >     LogStuff.info { "A different log message" }
    2.1.2 :011?>   end
     {"@source":"logstuff","@tags":["tag1"],"@fields":{},"@severity":"info","message":"A different log message","@timestamp":"2014-10-20T08:44:06.329569+00:00"}
-     => #<Set: {}>
+     => true
 
    # The same can be achieved with the metadata method
    2.1.2 :012 > LogStuff.metadata(:request_id => '345') do
    2.1.2 :013 >     LogStuff.info { "A different log message" }
    2.1.2 :014?>   end
    {"@source":"logstuff","@tags":[],"@fields":{"request_id":"345"},"@severity":"info","message":"A different log message","@timestamp":"2014-10-20T08:44:47.688320+00:00"}
-    => {}
+    => true
    ```
 
 ## Configuring for use with Rails
