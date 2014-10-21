@@ -59,6 +59,7 @@ module LogStuff
                                 '@fields' => get_thread_current(:current_fields).merge(local_fields)
     )
     logger << event.to_json + "\n"
+    true
   end
 
 
@@ -77,6 +78,7 @@ module LogStuff
     set_thread_current(:current_tags, current_tags)
     yield
     set_thread_current(:current_tags, original_tags)
+    true
   end
 
 
@@ -91,6 +93,7 @@ module LogStuff
     set_thread_current(:current_fields, current_fields)
     yield
     set_thread_current(:current_fields, original_fields)
+    true
   end
 
 
