@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Paul Rhodes"]
   spec.email         = ["withnale@users.noreply.github.com"]
   spec.summary       = %q{Structured Logging for use with Logstash}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/withnale/logstuff"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
