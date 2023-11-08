@@ -1,6 +1,5 @@
 # Logstuff
 
-
 Logstuff is a rubygem for writing application logs in a more structured form.
 
 It will output the logs in JSON format to allow collection from logstash/beaver
