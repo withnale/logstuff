@@ -11,8 +11,8 @@ jobs:
       - name : Print Title of PR
         env:
             TITLE: ${{ toJson(github.event.pull_request) }}
-            ASS1: ${{ toJson(github.event.pull_request.assignee }}
-            ASS2: ${{ toJson(github.event.pull_request.assignees }}
+            ASS1: ${{ toJson(github.event.pull_request.assignee) }}
+            ASS2: ${{ toJson(github.event.pull_request.assignees) }}
         run: |
           echo ASS1 $ASS1
           echo ASS2 $ASS2
