@@ -11,7 +11,12 @@ jobs:
       - name : Print Title of PR
         env:
             TITLE: ${{ toJson(github.event.pull_request) }}
-        run: echo The Title of your PR is $TITLE
+            ASS1: ${{ toJson(github.event.pull_request.assignee }}
+            ASS2: ${{ toJson(github.event.pull_request.assignees }}
+        run: 
+         - echo ASS1=$ASS1
+         - echo ASS2=$ASS2
+         - echo The Title of your PR is $TITLE
 
       - name: Dump GitHub context
         env:
