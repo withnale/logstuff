@@ -8,6 +8,11 @@ jobs:
   one:
     runs-on: ubuntu-latest
     steps:
+      - name : Print Title of PR
+        env:
+            TITLE: ${{ github.event.pull_request.title }}
+        run: echo The Title of your PR is $TITLE
+
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
