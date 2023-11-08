@@ -2,7 +2,7 @@ name: This is an example
 
 on:
   pull_request:
-   types: [opened, synchronize, labelled, unlabelled]
+   types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
   one:
