@@ -10,7 +10,7 @@ jobs:
     steps:
       - name : Print Title of PR
         env:
-            TITLE: ${{ github.event.pull_request.title }}
+            TITLE: ${{ toJson(github.event.pull_request) }}
         run: echo The Title of your PR is $TITLE
 
       - name: Dump GitHub context
