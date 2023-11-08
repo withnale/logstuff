@@ -1,0 +1,13 @@
+
+
+on:
+  workflow_dispatch: null
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+
+env:
+  REGION: europe-west1
+
+jobs:
+  p2p:
+    uses: ./.github/workflows/p2p.yaml

@@ -1,0 +1,21 @@
+on:
+  workflow_call:
+    inputs:
+      command:
+        required: true
+        type: string
+      envmatrix:
+        required: true
+        type: string
+
+
+jobs:
+  env:
+    strategy:
+      matrix: ${{ fromJSON(inputs.envmatrix) }}
+      fail-fast: false
+    uses: ./.github/workflows/execute-command.yaml
+    with:
+      command: ${{ inputs.command }}
+      github_env: ${{ matrix.deploy_env }}
+

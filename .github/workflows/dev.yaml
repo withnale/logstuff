@@ -1,0 +1,9 @@
+
+on:
+  workflow_dispatch: null
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+
+jobs:
+  p2p:
+    uses: ./.github/workflows/p2p-workflow-definition.yaml
