@@ -8,6 +8,7 @@ jobs:
   
   p2p:
     uses: ./.github/workflows/p2p.yaml
+    environment: sandbox-1
     secrets:
       env_vars: |
         ENVIRONMENT=${{ vars.ENV }}
