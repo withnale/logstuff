@@ -21,6 +21,9 @@ on:
       tenant-name:
         required: true
         type: string
+      region:
+        type: string
+        default: europe-west1
 
 env:
   REGISTRY: ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project-id }}/tenant
