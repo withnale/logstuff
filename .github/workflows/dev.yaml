@@ -9,6 +9,7 @@ env:
 jobs:
   p2p:
     runs-on: ubuntu-latest
+    environment: cecg-sandbox
     env:
       REGISTRY: ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
       SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
