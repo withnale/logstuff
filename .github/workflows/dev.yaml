@@ -31,6 +31,8 @@ jobs:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Generate matrix
         id: generate_matrix
         run: |
@@ -40,6 +42,10 @@ jobs:
   p2p:
     uses: ./.github/workflows/p2p.yaml
     needs: generate_matrix
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     secrets:
       env_vars: |
         SHORTNAME=${{ needs.generate_matrix.outputs.matrix.deploy_env }}
