@@ -1,22 +1,23 @@
-name: This is an example
+
 
 on:
   pull_request:
-   types: [opened, synchronize, labeled, unlabeled]
+    types: [opened, synchronize, labeled, unlabeled]
+
+env:
+  REGION: europe-west1
 
 jobs:
-  
   p2p:
-    uses: ./.github/workflows/p2p.yaml
-    secrets:
-      env_vars: |
-        ENVIRONMENT=${{ vars.ENV }}
-        BASE_URL=${{ vars.BASE_URL }}
-    with:
-      deploy-env: cecg-sandbox
-      env-name: ${{ vars.ENV }}
-      project-id: ${{ vars.PROJECT_ID }}
-      project-number: ${{ vars.PROJECT_NUMBER }}
-      tenant-name: ${{ vars.TENANT_NAME }}
-  
-  
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
+      SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
+      WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
+      
+    steps:
+      - name: Setup inputs passed to the reusable workflow
+        id: setup
+        run: |
+          echo "workflow_identity_provider=$WORKLOAD_IDENTITY_PROVIDER"
+          echo "service_account=$SERVICE_ACCOUNT"
