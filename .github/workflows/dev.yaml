@@ -14,6 +14,9 @@ jobs:
       matrix:
         deploy_env:
           - cecg-sandbox
+          - cecg-sandbox-1
+          - cecg-sandbox-2
+          - cecg-sandbox-3
     environment: ${{ matrix.deploy_env }}
     outputs:
       deploy_env: ${{ matrix.deploy_env }}
@@ -36,6 +39,7 @@ jobs:
     needs: generate_matrix
     secrets:
       env_vars: |
+        SHORTNAME=${{ needs.generate_matrix.outputs.matrix.deploy_env }}
         ENVIRONMENT=${{ needs.generate_matrix.outputs.env }}
         BASE_URL=${{ needs.generate_matrix.outputs.base_url }}
     with:
