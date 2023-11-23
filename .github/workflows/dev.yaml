@@ -7,17 +7,41 @@ env:
   REGION: europe-west1
 
 jobs:
-  p2p:
+
+  generate_matrix:
     runs-on: ubuntu-latest
-    environment: cecg-sandbox
-    env:
-      REGISTRY: ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
-      SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
-      WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
-      
+    strategy:
+      matrix:
+        deploy_env:
+          - cecg-sandbox
+    environment: ${{ matrix.deploy_env }}
+    outputs:
+      deploy_env: ${{ matrix.deploy_env }}
+      matrix: ${{ steps.generate_matrix.outputs.matrix }}
+      region: ${{ vars.REGION }}
+      project_id: ${{ vars.PROJECT_ID }}
+      project_number: ${{ vars.PROJECT_NUMBER }}
+      tenant_name: ${{ vars.TENANT_NAME }}
+      base_url: ${{ vars.BASE_URL }}
+      env: ${{ vars.ENV }}
     steps:
-      - name: Setup inputs passed to the reusable workflow
-        id: setup
+      - name: Generate matrix
+        id: generate_matrix
         run: |
-          echo "workflow_identity_provider=$WORKLOAD_IDENTITY_PROVIDER"
-          echo "service_account=$SERVICE_ACCOUNT"
+          echo "hello"
+          
+
+  p2p:
+    uses: ./.github/workflows/p2p.yaml
+    needs: generate_matrix
+    secrets:
+      env_vars: |
+        ENVIRONMENT=${{ needs.generate_matrix.outputs.env }}
+        BASE_URL=${{ needs.generate_matrix.outputs.base_url }}
+    with:
+      deploy-env: ${{ needs.generate_matrix.outputs.deploy_env }}
+      env-name: ${{ needs.generate_matrix.outputs.env }}
+      project-id: ${{ needs.generate_matrix.outputs.project_id }}
+      project-number: ${{ needs.generate_matrix.outputs.project_number }}
+      tenant-name: ${{ needs.generate_matrix.outputs.tenant_name }}
+  
