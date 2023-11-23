@@ -28,6 +28,9 @@ jobs:
       base_url: ${{ vars.BASE_URL }}
       env: ${{ vars.ENV }}
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
       - name: Generate matrix
         id: generate_matrix
         run: |
