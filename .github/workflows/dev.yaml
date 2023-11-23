@@ -5,47 +5,18 @@ on:
    types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
-  one:
-    runs-on: ubuntu-latest
-    steps:
-      - name : Print Title of PR
-        env:
-            ASS1: ${{ toJson(github.event.pull_request.assignee.login) }}
-        run: |
-          echo ASS1 $ASS1
-          echo ASS2 $ASS2
-          echo The Title of your PR is $TITLE
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-
-      - name: Show default environment variables
-        run: |
-          echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-          echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-          echo "The run id is: $GITHUB_RUN_ID"
-          echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-          echo "GitHub SHA: $GITHUB_SHA"
-
+  
+  p2p:
+    uses: ./.github/workflows/p2p.yaml
+    secrets:
+      env_vars: |
+        ENVIRONMENT=${{ vars.ENV }}
+        BASE_URL=${{ vars.BASE_URL }}
+    with:
+      deploy-env: cecg-sandbox
+      env-name: ${{ vars.ENV }}
+      project-id: ${{ vars.PROJECT_ID }}
+      project-number: ${{ vars.PROJECT_NUMBER }}
+      tenant-name: ${{ vars.TENANT_NAME }}
+  
+  
