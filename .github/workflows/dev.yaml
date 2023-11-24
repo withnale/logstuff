@@ -9,6 +9,9 @@ env:
 jobs:
   generate_matrix:
     runs-on: ubuntu-latest
+    # generate a dynamic matrix
+    strategy:
+
     steps:
       - name: Dump GitHub context
         env:
@@ -18,11 +21,6 @@ jobs:
   p2p:
     uses: ./.github/workflows/p2p.yaml
     strategy:
-      matrix:
-        deploy_env:
-          - cecg-sandbox
-          - cecg-sandbox-1
-          - cecg-sandbox-2
-          - cecg-sandbox-3
+      matrix: ${{ fromJson(vars.STAGE_DEV) }}
     with:
       deploy-env: ${{ matrix.deploy_env }}
