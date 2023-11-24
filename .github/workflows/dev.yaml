@@ -7,7 +7,8 @@ env:
   REGION: europe-west1
 
 jobs:
-  p2p:
+
+  generate_matrix:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,6 +18,15 @@ jobs:
           - cecg-sandbox-2
           - cecg-sandbox-3
     environment: ${{ matrix.deploy_env }}
+    outputs:
+      deploy_env: ${{ matrix.deploy_env }}
+      matrix: ${{ matrix.deploy }}
+      region: ${{ vars.REGION }}
+      project_id: ${{ vars.PROJECT_ID }}
+      project_number: ${{ vars.PROJECT_NUMBER }}
+      tenant_name: ${{ vars.TENANT_NAME }}
+      base_url: ${{ vars.BASE_URL }}
+      env: ${{ vars.ENV }}
     steps:
       - name: Dump GitHub context
         env:
@@ -26,10 +36,34 @@ jobs:
       - name: Run P2P
         uses: ./.github/workflows/p2p.yaml
         id: run-p2p
+        secrets:
+          env_vars: |
+            SHORTNAME=${{ needs.generate_matrix.outputs.matrix.deploy_env }}
+            ENVIRONMENT=${{ needs.generate_matrix.outputs.env }}
+            BASE_URL=${{ needs.generate_matrix.outputs.base_url }}
         with:
-          deploy-env: ${{ matrix.deploy_env }}
-          env-name: ${{ vars.ENV }}
-          project-id: ${{ vars.PROJECT_ID }}
-          project-number: ${{ vars.PROJECT_NUMBER }}
-          tenant-name: ${{ vars.TENANT_NAME }}
+          deploy-env: ${{ needs.generate_matrix.outputs.deploy_env }}
+          env-name: ${{ needs.generate_matrix.outputs.env }}
+          project-id: ${{ needs.generate_matrix.outputs.project_id }}
+          project-number: ${{ needs.generate_matrix.outputs.project_number }}
+          tenant-name: ${{ needs.generate_matrix.outputs.tenant_name }}
 
+
+  p2p:
+    uses: ./.github/workflows/p2p.yaml
+    needs: generate_matrix
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    secrets:
+      env_vars: |
+        SHORTNAME=${{ needs.generate_matrix.outputs.matrix.deploy_env }}
+        ENVIRONMENT=${{ needs.generate_matrix.outputs.env }}
+        BASE_URL=${{ needs.generate_matrix.outputs.base_url }}
+    with:
+      deploy-env: ${{ needs.generate_matrix.outputs.deploy_env }}
+      env-name: ${{ needs.generate_matrix.outputs.env }}
+      project-id: ${{ needs.generate_matrix.outputs.project_id }}
+      project-number: ${{ needs.generate_matrix.outputs.project_number }}
+      tenant-name: ${{ needs.generate_matrix.outputs.tenant_name }}
