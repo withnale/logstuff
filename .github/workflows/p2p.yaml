@@ -36,6 +36,7 @@ jobs:
           echo "service_account=$SERVICE_ACCOUNT"
 
   print:
+    runs-on: ubuntu-latest
     needs: setup
     steps:
       - name: print
