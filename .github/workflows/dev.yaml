@@ -17,4 +17,4 @@ jobs:
           - cecg-sandbox-2
           - cecg-sandbox-3
     with:
-      deploy-env: ${{ needs.generate_matrix.outputs.deploy_env }}
+      deploy-env: ${{ matrix.deploy_env }}
