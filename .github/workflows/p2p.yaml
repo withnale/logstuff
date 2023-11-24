@@ -20,7 +20,7 @@ jobs:
     outputs:
       workflow_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
       service_account: ${{ vars.SERVICE_ACCOUNT }}
-      deploy_env: ${{ input.deploy-env }}
+      deploy_env: ${{ inputs.deploy-env }}
       region: ${{ vars.REGION }}
       project_id: ${{ vars.PROJECT_ID }}
       project_number: ${{ vars.PROJECT_NUMBER }}
