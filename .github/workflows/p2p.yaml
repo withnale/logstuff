@@ -42,4 +42,7 @@ jobs:
       - name: print
         id: print
         run: |
-          printenv
+          echo "deploy_env=${{ needs.setup.outputs.deploy_env }}"
+          echo "project_id=${{ needs.setup.outputs.project_id }}"
+          echo "project_number=${{ needs.setup.outputs.project_number }}"
+          echo "base_url=${{ needs.setup.outputs.base_url }}"
