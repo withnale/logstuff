@@ -23,7 +23,6 @@ jobs:
     env: ${{ fromJSON(secrets.env_vars) }}
     steps:
       - name: print
-        id: print
         run: |
           echo "BASE_URL=$BASE_URL"
           echo "PROJECT_ID=$PROJECT_ID"
