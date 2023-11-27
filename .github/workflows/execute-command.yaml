@@ -14,6 +14,7 @@ on:
 
 jobs:
   setup_command:
+    name: ${{ inputs.command }}-${{ inputs.github_env }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.github_env }}
     env:
@@ -44,7 +45,7 @@ jobs:
 
 
   execute_command:
-    name: ${{ inputs.command }}
+    name: ${{ inputs.command }}-${{ inputs.github_env }}
     environment: ${{ inputs.github_env }}
     runs-on: ubuntu-latest
     needs: setup_command
