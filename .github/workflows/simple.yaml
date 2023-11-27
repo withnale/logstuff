@@ -12,7 +12,7 @@ jobs:
       MATRIX: '{ "component": ["rod", "jane", "freddy"] }'
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(envs.MATRIX) }}
+      matrix: ${{ fromJson(env.MATRIX) }}
     steps:
       - run: |
           echo "${{ matrix.component }}"
