@@ -75,6 +75,7 @@ jobs:
           echo "env=${{ needs.setup.outputs.env-name }}"
           echo "service_account=${{ needs.setup.outputs.service_account }}"
           echo "registry=${{ needs.setup.outputs.registry }}"
+          echo "env_vars=${{ needs.setup.outputs.env_vars }}"
   
 
   build:
