@@ -9,11 +9,10 @@ jobs:
   example_matrix:
     strategy:
       matrix:
-        version:
-          include:
-            - { version: 'rod' }
-            - { version: 'jane' }
-            - { version: 'freddy' }
+        include:
+          - { version: 'rod' }
+          - { version: 'jane' }
+          - { version: 'freddy' }
     runs-on: ubuntu-latest
     steps:
       - run: |
