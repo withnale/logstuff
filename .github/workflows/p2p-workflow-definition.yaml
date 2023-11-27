@@ -82,7 +82,7 @@ jobs:
     name: build
     needs: [setup]
     uses: ./.github/workflows/execute-command.yaml
-    inputs:
+    with:
       foo: ${{ needs.setup.outputs.env_vars }}
 
   functional-test:
