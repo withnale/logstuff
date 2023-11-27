@@ -9,7 +9,7 @@ on:
       foo:
         required: false
         type: string
-        default: 'bar'
+        default: '{"BASE_URL": "APPLE", "ENV": "BLUE"}'
 
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       contents: read
       id-token: write
 
-    env: ${{ fromJSON('{"FAVORITE_FRUIT": "APPLE", "FAVORITE_COLOR": "BLUE"}') }}
+    env: ${{ fromJSON(inputs.foo) }}
     #env: ${{ fromJSON(secrets.env_vars) }}
     steps:
       - name: print
