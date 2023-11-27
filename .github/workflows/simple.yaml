@@ -12,8 +12,6 @@ env:
 jobs:
   example_run:
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(env.MATRIX) }}
     steps:
       - run: |
-          echo "${{ matrix.component }}"
+          echo "${{env.MATRIX }}"
