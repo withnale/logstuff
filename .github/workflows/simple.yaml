@@ -7,13 +7,20 @@ on:
 
 jobs:
   example_matrix:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - { version: 'rod' }
           - { version: 'jane' }
           - { version: 'freddy' }
-    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ toJson(matrix) }}
+
+  example_run:
+    needs: example_matrix
+    strategy:
+      matrix: ${{ fromJson(needs.example_matrix.outputs.matrix) }}
     steps:
       - run: |
           echo "${{ matrix.version }}"
