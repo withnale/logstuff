@@ -11,9 +11,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { version: 'rod' }
-          - { version: 'jane' }
-          - { version: 'freddy' }
+          - { component: 'rod' }
+          - { component: 'jane' }
+          - { component: 'freddy' }
     outputs:
       matrix: ${{ toJson(matrix) }}
     steps:
@@ -28,4 +28,4 @@ jobs:
       matrix: ${{ fromJson(needs.example_matrix.outputs.matrix) }}
     steps:
       - run: |
-          echo "${{ matrix.version }}"
+          echo "${{ matrix.component }}"
