@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize, labeled, unlabeled]
 
 env:
-  MATRIX: '{ "include": { "component": "rod"}, {"component: "jane" }] }'
+  MATRIX: '{ "include": [{ "component": "rod"}, {"component: "jane" }] }'
 
 
 jobs:
