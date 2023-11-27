@@ -5,15 +5,11 @@ on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
 
-env:
-  MYMATRIX: '{ "include": [{ "deploy": "rod"}, {"deploy": "jane" }] }'
-
-
 jobs:
   example_run:
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(env.MYMATRIX) }}
+      matrix: ${{ fromJson(var.STAGE_DEV) }}
     steps:
       - run: |
-          echo "${{ matrix.deploy }}"
+          echo "${{ matrix.deploy_env }}"
