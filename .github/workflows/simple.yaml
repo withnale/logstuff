@@ -1,0 +1,16 @@
+
+
+on:
+  workflow_dispatch: null
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+
+jobs:
+  example_matrix:
+    strategy:
+      matrix:
+        version: [10, 12, 14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: |
+          echo "${{ matrix.version }}"
