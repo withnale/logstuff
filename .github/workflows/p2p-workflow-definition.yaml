@@ -72,6 +72,7 @@ jobs:
           echo "project_number=${{ needs.setup.outputs.project-number }}"
           echo "base_url=${{ needs.setup.outputs.base-url }}"
           echo "workflow_identity_provider=${{ needs.setup.outputs.workflow_identity_provider }}"
+          echo "env=${{ needs.setup.outputs.env-name }}"
           echo "service_account=${{ needs.setup.outputs.service_account }}"
           echo "registry=${{ needs.setup.outputs.registry }}"
   
