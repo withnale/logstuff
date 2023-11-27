@@ -54,7 +54,7 @@ jobs:
       contents: read
       id-token: write
 
-    env: ${{ fromJSON(needs.setup_command.env_vars) }}
+    env: ${{ fromJSON(needs.setup_command.outputs.env_vars) }}
     #env: ${{ fromJSON(secrets.env_vars) }}
     steps:
       - name: print
