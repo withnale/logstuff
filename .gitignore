@@ -1,4 +1,5 @@
 *.gem
+.history/
 *.rbc
 .bundle
 .config

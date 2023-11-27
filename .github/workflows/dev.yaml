@@ -1,9 +1,7 @@
 
 on:
-  workflow_dispatch:
-    inputs:
-      deploy_env:
-        description: "Environment to deploy"
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
 
 env:
   REGION: europe-west1
@@ -11,5 +9,7 @@ env:
 jobs:
   deploy_to_dev:
     uses: ./.github/workflows/p2p.yaml
+    strategy:
+      matrix: ${{ fromJson(vars.STAGE_DEV) }}
     with:
-      deploy-env: ${{ inputs.deploy_env }}
+      deploy-env: ${{ matrix.deploy_env }}
