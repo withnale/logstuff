@@ -6,4 +6,5 @@ on:
 
 jobs:
   simple:
+    name: ''
     uses: ./.github/workflows/simple-definition.yaml
