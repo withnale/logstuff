@@ -22,6 +22,7 @@ jobs:
 
   example_run:
     needs: example_matrix
+    runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.example_matrix.outputs.matrix) }}
     steps:
