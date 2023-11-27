@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         version: [10, 12, 14]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - run: |
           echo "${{ matrix.version }}"
