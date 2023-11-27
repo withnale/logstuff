@@ -10,9 +10,10 @@ jobs:
     strategy:
       matrix:
         version:
-          - rod
-          - jane
-          - freddy
+          include:
+            - { version: 'rod' }
+            - { version: 'jane' }
+            - { version: 'freddy' }
     runs-on: ubuntu-latest
     steps:
       - run: |
