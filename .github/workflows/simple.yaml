@@ -6,14 +6,14 @@ on:
     types: [opened, synchronize, labeled, unlabeled]
 
 env:
-  MATRIX: '{ "include": [{ "deploy": "rod"}, {"deploy": "jane" }] }'
+  MYMATRIX: '{ "include": [{ "deploy": "rod"}, {"deploy": "jane" }] }'
 
 
 jobs:
   example_run:
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(env.MATRIX) }}
+      matrix: ${{ fromJson(env.MYMATRIX) }}
     steps:
       - run: |
           echo "${{ matrix.deploy }}"
