@@ -50,7 +50,7 @@ jobs:
           \"REGISTRY\": \"${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant\",
           \"SERVICE_ACCOUNT\": \"p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com\",
           \"WORKLOAD_IDENTITY_PROVIDER\": \"projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}\",
-          \"ENVIRONMENT\": \"${{ vars.ENV }}\"
+          \"ENVIRONMENT\": \"${{ vars.ENV }}\",
           \"BASE_URL\": \"${{ vars.BASE_URL }}\"
         }
     steps:
