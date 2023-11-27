@@ -1,15 +1,9 @@
 
-
 on:
   workflow_dispatch: null
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
-  example_run:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJson(vars.STAGE_DEV) }}
-    steps:
-      - run: |
-          echo "${{ matrix.deploy_env }}"
+  simple:
+    uses: ./.github/workflows/simple-definition.yaml

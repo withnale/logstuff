@@ -1,0 +1,18 @@
+
+
+on:
+  workflow_call:
+    inputs:
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(vars.STAGE_DEV) }}
+    steps:
+      - run: |
+          echo "${{ matrix.deploy_env }}"
