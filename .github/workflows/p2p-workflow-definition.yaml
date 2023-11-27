@@ -30,7 +30,6 @@ on:
 env:
   REGION: europe-west2
 
-
 jobs:
   setup:
     runs-on: ubuntu-latest
