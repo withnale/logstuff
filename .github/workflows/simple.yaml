@@ -5,11 +5,11 @@ on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
 
-env:
-  MATRIX: '{ "component": ["rod", "jane", "freddy"] }'
 
 jobs:
   example_run:
+    env:
+      MATRIX: '{ "component": ["rod", "jane", "freddy"] }'
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(env.MATRIX) }}
