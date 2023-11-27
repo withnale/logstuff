@@ -5,7 +5,11 @@ on:
     secrets:
       env_vars:
         required: false
-    inputs: null
+    inputs:
+      foo:
+        required: false
+        type: string
+        default: 'bar'
 
 
 jobs:
