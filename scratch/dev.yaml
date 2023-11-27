@@ -8,7 +8,7 @@ env:
   REGION: europe-west1
 
 jobs:
-  deploy_to_dev:
+  p2p:
     uses: ./.github/workflows/p2p.yaml
     strategy:
       matrix: ${{ fromJson(vars.STAGE_DEV) }}
