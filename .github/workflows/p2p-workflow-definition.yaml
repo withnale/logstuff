@@ -45,7 +45,7 @@ jobs:
       project-id: ${{ vars.PROJECT_ID }}
       base-url: ${{ vars.BASE_URL }}
       env-name: ${{ vars.ENV }}
-      env_vars: >
+      env_vars: >+
         { 
           \"REGISTRY\": \"${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant\",
           \"SERVICE_ACCOUNT\": \"p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com\",
