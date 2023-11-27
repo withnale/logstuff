@@ -45,14 +45,7 @@ jobs:
       project-id: ${{ vars.PROJECT_ID }}
       base-url: ${{ vars.BASE_URL }}
       env-name: ${{ vars.ENV }}
-      env_vars: >+
-        { 
-          \"REGISTRY\": \"${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant\",
-          \"SERVICE_ACCOUNT\": \"p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com\",
-          \"WORKLOAD_IDENTITY_PROVIDER\": \"projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}\",
-          \"ENVIRONMENT\": \"${{ vars.ENV }}\",
-          \"BASE_URL\": \"${{ vars.BASE_URL }}\"
-        }
+      env_vars: "{ \"REGISTRY\": \"${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant\", \"SERVICE_ACCOUNT\": \"p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com\", \"WORKLOAD_IDENTITY_PROVIDER\": \"projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}\", \"ENVIRONMENT\": \"${{ vars.ENV }}\", \"BASE_URL\": \"${{ vars.BASE_URL }}\" }"
     steps:
       - name: Setup inputs passed to the reusable workflow
         id: setup
