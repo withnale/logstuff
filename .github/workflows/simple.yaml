@@ -6,12 +6,14 @@ on:
     types: [opened, synchronize, labeled, unlabeled]
 
 env:
-  MATRIX: '{ "component": ["rod", "jane", "freddy"] }'
+  MATRIX: '{ "include": { "component": "rod"}, {"component: "jane" }] }'
 
 
 jobs:
   example_run:
     runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(env.MATRIX) }}
     steps:
       - run: |
-          printf "${{env.MATRIX }}"
+          echo "${{ matrix.component }}"
