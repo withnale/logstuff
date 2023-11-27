@@ -1,0 +1,109 @@
+name: Developer Platform P2P
+
+
+on:
+  workflow_call:
+    inputs:
+      deploy-env:
+        required: true
+        type: string
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+      pre-targets:
+        description: |
+          Make targets to run before each p2p command
+        required: false
+        type: string
+        default: ''
+      post-targets:
+        description: |
+          Make targets to run after each p2p command
+        required: false
+        type: string
+        default: ''
+
+env:
+  REGION: europe-west2
+
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
+      SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
+      WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
+    outputs:
+      workflow_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+      service_account: ${{ env.SERVICE_ACCOUNT }}
+      deploy-env: ${{ inputs.deploy-env }}
+      region: ${{ vars.REGION }}
+      project-id: ${{ vars.PROJECT_ID }}
+      base-url: ${{ vars.BASE_URL }}
+      env-name: ${{ vars.ENV }}
+      envvars: |
+        REGISTRY: ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
+        SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
+        WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
+        ENVIRONMENT=${{ vars.ENV }}
+        BASE_URL=${{ vars.BASE_URL }}
+      env_vars: |
+        { 
+          "REGISTRY": "${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant",
+          "SERVICE_ACCOUNT": "p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com",
+          "WORKLOAD_IDENTITY_PROVIDER": "projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}",
+          "ENVIRONMENT": "${{ vars.ENV }}"
+          "BASE_URL": "${{ vars.BASE_URL }}"
+        }
+    steps:
+      - name: Setup inputs passed to the reusable workflow
+        id: setup
+        run: |
+          echo "workflow_identity_provider=$WORKLOAD_IDENTITY_PROVIDER"
+          echo "service_account=$SERVICE_ACCOUNT"
+
+  print:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: print
+        id: print
+        run: |
+          echo "deploy_env=${{ needs.setup.outputs.deploy-env }}"
+          echo "project_id=${{ needs.setup.outputs.project-id }}"
+          echo "project_number=${{ needs.setup.outputs.project-number }}"
+          echo "base_url=${{ needs.setup.outputs.base-url }}"
+          echo "workflow_identity_provider=${{ needs.setup.outputs.workflow_identity_provider }}"
+          echo "service_account=${{ needs.setup.outputs.service_account }}"
+          echo "registry=${{ needs.setup.outputs.registry }}"
+  
+
+  build:
+    needs: [setup]
+    uses: ./.github/workflows/execute-command.yaml
+    secrets:
+      env_vars: ${{ needs.setup.outputs.envvars }}
+
+  functional-test:
+    needs: [build, setup]
+    uses: ./.github/workflows/execute-command.yaml
+    secrets:
+      env_vars: ${{ needs.setup.outputs.envvars }}
+
+  nft-test:
+    name: nft-test
+    needs: [functional-test, setup]
+    secrets:
+      env_vars: ${{ needs.setup.outputs.envvars }}
+    uses: ./.github/workflows/execute-command.yaml
+
+  dev-deploy:
+    name: dev-deploy
+    #if: github.ref == 'refs/heads/main'
+    needs: [nft-test, setup]
+    secrets:
+      env_vars: ${{ needs.setup.outputs.envvars }}
+    uses: ./.github/workflows/execute-command.yaml
+

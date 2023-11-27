@@ -1,0 +1,29 @@
+name: p2p-command
+
+on:
+  workflow_call:
+    secrets:
+      env_vars:
+        required: false
+    inputs: null
+
+
+jobs:
+  p2p:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    env: ${{ fromJSON(secrets.env_vars) }}
+    steps:
+      - name: print
+        id: print
+        run: |
+          echo "BASE_URL=$BASE_URL"
+          echo "PROJECT_ID=$PROJECT_ID"
+          echo "PROJECT_NUMBER=$PROJECT_NUMBER"
+          echo "TENANT_NAME=$TENANT_NAME"
+          echo "ENV=$ENV"
+

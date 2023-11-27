@@ -1,0 +1,16 @@
+
+on:
+  workflow_dispatch: null
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+
+env:
+  REGION: europe-west1
+
+jobs:
+  deploy_to_dev:
+    uses: ./.github/workflows/p2p.yaml
+    strategy:
+      matrix: ${{ fromJson(vars.STAGE_DEV) }}
+    with:
+      deploy-env: ${{ matrix.deploy_env }}

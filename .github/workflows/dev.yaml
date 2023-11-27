@@ -1,16 +1,19 @@
 
 on:
   workflow_dispatch: null
-  pull_request:
-    types: [opened, synchronize, labeled, unlabeled]
 
 env:
   REGION: europe-west1
 
 jobs:
   deploy_to_dev:
-    uses: ./.github/workflows/p2p.yaml
-    strategy:
-      matrix: ${{ fromJson(vars.STAGE_DEV) }}
+    uses: ./.github/workflows/p2p-workflow-definition.yaml
+    secrets:
+      env_vars: |
+        ENV=${{ vars.ENV }}
+        BASE_URL=${{ vars.BASE_URL }}
+        TENANT_NAME=${{ vars.TENANT_NAME }}
+        PROJECT_ID=${{ vars.PROJECT_ID }}
+        PROJECT_NAME=${{ vars.PROJECT_NAME }}
     with:
-      deploy-env: ${{ matrix.deploy_env }}
+      deploy-env: 'cecg-sandbox'
