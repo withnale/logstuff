@@ -3,7 +3,9 @@ name: Developer Platform P2P
 
 on:
   workflow_call:
-    sec
+    secrets:
+      env_vars:
+        required: false
     inputs:
       deploy-env:
         required: true
