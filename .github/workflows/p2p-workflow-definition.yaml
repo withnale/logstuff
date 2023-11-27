@@ -95,7 +95,7 @@ jobs:
 
 
   prod-deploy:
-    needs: [build]
+    needs: [build,functional-test]
     uses: ./.github/workflows/envmatrix-execute-command.yaml
     with:
       command: prod
