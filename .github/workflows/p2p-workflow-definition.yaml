@@ -82,8 +82,8 @@ jobs:
     name: build
     needs: [setup]
     uses: ./.github/workflows/execute-command.yaml
-    secrets:
-      env_vars: ${{ needs.setup.outputs.env_vars }}
+    inputs:
+      foo: ${{ needs.setup.outputs.env_vars }}
 
   functional-test:
     name: functional-test
