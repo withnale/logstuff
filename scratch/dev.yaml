@@ -10,7 +10,3 @@ env:
 jobs:
   p2p:
     uses: ./.github/workflows/p2p.yaml
-    strategy:
-      matrix: ${{ fromJson(vars.STAGE_DEV) }}
-    with:
-      deploy-env: ${{ matrix.deploy_env }}
