@@ -9,7 +9,10 @@ jobs:
   example_matrix:
     strategy:
       matrix:
-        version: [10, 12, 14]
+        version:
+          - rod
+          - jane
+          - freddy
     runs-on: ubuntu-latest
     steps:
       - run: |
