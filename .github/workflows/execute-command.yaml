@@ -20,7 +20,8 @@ jobs:
       contents: read
       id-token: write
 
-    env: ${{ fromJSON(secrets.env_vars) }}
+    env: ${{ fromJSON('{"FAVORITE_FRUIT": "APPLE", "FAVORITE_COLOR": "BLUE"}') }}
+    #env: ${{ fromJSON(secrets.env_vars) }}
     steps:
       - name: print
         run: |
