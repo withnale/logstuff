@@ -16,6 +16,7 @@ jobs:
           - { version: 'freddy' }
     outputs:
       matrix: ${{ toJson(matrix) }}
+    steps: []
 
   example_run:
     needs: example_matrix
