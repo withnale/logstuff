@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize, labeled, unlabeled]
 
 env:
-  MATRIX: '{ "include": [{ "component": "rod"}, {"component": "jane" }] }'
+  MATRIX: '{ "include": [{ "deploy": "rod"}, {"deploy": "jane" }] }'
 
 
 jobs:
@@ -16,4 +16,4 @@ jobs:
       matrix: ${{ fromJson(env.MATRIX) }}
     steps:
       - run: |
-          echo "${{ matrix.component }}"
+          echo "${{ matrix.deploy }}"
