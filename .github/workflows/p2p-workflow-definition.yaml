@@ -79,7 +79,6 @@ jobs:
 #          echo "env_vars=${{ needs.setup.outputs.env_vars }}"
 #          echo "matrix=${{ needs.setup.outputs.matrix }}"
 #          echo "matrix=${{ needs.setup.outputs.envvars_cecg-sandbox }}"
-  
 
   build:
     uses: ./.github/workflows/envmatrix-execute-command.yaml
