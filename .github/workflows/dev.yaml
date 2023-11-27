@@ -1,5 +1,6 @@
 
 on:
+  workflow_dispatch: null
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
 
