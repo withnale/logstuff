@@ -9,7 +9,7 @@ jobs:
   example_run:
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(var.STAGE_DEV) }}
+      matrix: ${{ fromJson(vars.STAGE_DEV) }}
     steps:
       - run: |
           echo "${{ matrix.deploy_env }}"
