@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: add_additional_env_vars
         env:
-          ALL_VARS="${{ toJSON(vars) }}"
+          ALL_VARS: ${{ toJSON(vars) }}"
         run: |
           echo "ALL_VARS=$ALL_VARS"
       - name: print
