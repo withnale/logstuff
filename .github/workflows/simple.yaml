@@ -18,7 +18,8 @@ jobs:
       matrix: ${{ toJson(matrix) }}
     steps:
         - run: |
-            echo "::set-output name=matrix::${{ toJson(matrix) }}
+            echo "goo"
+            #echo "::set-output name=matrix::${{ toJson(matrix) }}
 
   example_run:
     needs: example_matrix
