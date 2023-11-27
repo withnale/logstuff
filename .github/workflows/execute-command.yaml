@@ -14,7 +14,6 @@ on:
 
 jobs:
   execute_command:
-    name: ${{ inputs.command }}-${{ inputs.github_env }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.github_env }}
     env:
