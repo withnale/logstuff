@@ -12,7 +12,7 @@ on:
 
 jobs:
   exec:
-    name: ${{ inputs.command }}-${{ inputs.github_env }}
+    name: '${{ inputs.command }} (${{ inputs.github_env }})'
     runs-on: ubuntu-latest
     environment: ${{ inputs.github_env }}
     env:
