@@ -71,6 +71,7 @@ jobs:
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
+    environment: ${{ matrix.deploy_env }}
     steps:
         - uses: actions/checkout@v4
         - name: execute-command

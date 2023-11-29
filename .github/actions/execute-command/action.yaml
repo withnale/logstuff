@@ -46,7 +46,6 @@ inputs:
 
 
 
-environment: cecg-sandbox
 runs:
   using: 'composite'
   steps:
