@@ -5,5 +5,9 @@ on:
     types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
-  p2p:
+  fastfeedback:
+    uses: ./.github/workflows/p2p-workflow-definition.yaml
+  extendedtests:
+    uses: ./.github/workflows/p2p-workflow-definition.yaml
+  prod:
     uses: ./.github/workflows/p2p-workflow-definition.yaml
