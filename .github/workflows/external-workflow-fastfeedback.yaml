@@ -71,11 +71,15 @@ jobs:
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
-    with:
-      command: p2p-build
-      github_env: ${{ matrix.deploy_env }}
-      tag: ${{ needs.version.outputs.image_tag }}
-      semver: ${{ needs.version.outputs.semver }}
+    steps:
+        - uses: actions/checkout@v4
+        - name: execute-command
+          uses: ./.github/workflows/execute-command.yaml
+          with:
+            command: p2p-build
+            github_env: ${{ matrix.deploy_env }}
+            tag: ${{ needs.version.outputs.image_tag }}
+            semver: ${{ needs.version.outputs.semver }}
 
   functional-test:
     needs: [version, build]
