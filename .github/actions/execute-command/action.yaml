@@ -46,7 +46,7 @@ inputs:
 
 
 
-environment: ${{ inputs.github_env }}
+environment: cecg-sandbox
 runs:
   using: 'composite'
   steps:
