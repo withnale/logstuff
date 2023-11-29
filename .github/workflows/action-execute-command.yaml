@@ -1,0 +1,79 @@
+name: '${{ inputs.command }} (${{ inputs.github_env }})'
+inputs:
+  command:
+    required: true
+    type: string
+  github_env:
+    required: false
+    type: string
+    default: ''
+  dry-run:
+    required: false
+    type: boolean
+    default: false
+  region:
+    required: false
+    type: string
+    default: europe-west2
+  tag:
+    required: false
+    type: string
+    default: ''
+  semver:
+    required: false
+    type: string
+    default: ''
+  zone:
+    required: false
+    type: string
+    default: europe-west2-a
+  pre-targets:
+    description: |
+      Make targets to run before the command
+    required: false
+    type: string
+    default: ''
+  post-targets:
+    description: |
+      Make targets to run after the command
+    required: false
+    type: string
+    default: ''
+
+
+environment: ${{ inputs.github_env }}
+env:
+  TAG_VERSION: ${{ inputs.tag }}
+  SEMVER: ${{ inputs.semver }}
+  REGION: ${{ inputs.region }}
+  REGISTRY: ${{ inputs.region }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
+  SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
+  WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
+  BASE_URL: ${{ vars.BASE_URL }}
+  ENVIRONMENT: ${{ vars.ENV }}
+  ENV: ${{ vars.ENV }}
+  PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+  PROJECT_ID: ${{ vars.PROJECT_ID }}
+  TENANT_NAME: ${{ vars.TENANT_NAME }}
+  ADDITIONAL_ENV_VARS: "FOO,BAR"
+runs:
+  using: 'composite'
+  steps:
+    - name: add_additional_env_vars
+      env:
+        ALL_VARS: ${{ toJSON(vars) }}"
+      run: |
+        echo "ALL_VARS=$ALL_VARS"
+    - name: print
+      run: |
+        echo "TAG_VERSION=$TAG_VERSION"
+        echo "SEMVER=$SEMVER"
+        echo "BASE_URL=$BASE_URL"
+        echo "PROJECT_ID=$PROJECT_ID"
+        echo "REGION=$REGION"
+        echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT"
+        echo "WORKLOAD_IDENTITY_PROVIDER=$WORKLOAD_IDENTITY_PROVIDER"
+        echo "REGISTRY=$REGISTRY"
+        echo "PROJECT_NUMBER=$PROJECT_NUMBER"
+        echo "TENANT_NAME=$TENANT_NAME"
+        echo "ENV=$ENVIRONMENT"

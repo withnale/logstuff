@@ -67,7 +67,7 @@ jobs:
 
   build:
     needs: [version]
-    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    uses: ./.github/workflows/execute-command.yaml
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
@@ -79,7 +79,7 @@ jobs:
 
   functional-test:
     needs: [version, build]
-    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    uses: ./.github/workflows/execute-command.yaml
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
@@ -92,7 +92,7 @@ jobs:
 
   nft-test:
     needs: [version, functional-test]
-    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    uses: ./.github/workflows/execute-command.yaml
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
