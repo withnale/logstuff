@@ -46,7 +46,7 @@ inputs:
 
 
 
-#environment: ${{ inputs.github_env }}
+environment: ${{ inputs.github_env }}
 runs:
   using: 'composite'
   steps:
