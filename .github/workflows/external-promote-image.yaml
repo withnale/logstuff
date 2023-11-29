@@ -91,9 +91,8 @@ jobs:
       - name: print
         run: |
           echo "SOURCE_GITHUB_ENV=${{ inputs.source_github_env }}"
-          echo "SOURCE_GITHUB_ENV=${{ inputs.source_github_env }}"
           echo "DEST_GITHUB_ENV=${{ inputs.dest_github_env }}"
-          echo "${{ toJSON(env) }}"
+          echo "${{ toJSON(env) }}" | jq .
           echo "SOURCE_REGISTRY=$SOURCE_REGISTRY"
           echo "SOURCE_SERVICE_ACCOUNT=$SOURCE_SERVICE_ACCOUNT"
           echo "SOURCE_WORKLOAD_IDENTITY_PROVIDER=$SOURCE_WORKLOAD_IDENTITY_PROVIDER"
