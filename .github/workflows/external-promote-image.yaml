@@ -92,7 +92,7 @@ jobs:
         run: |
           echo "SOURCE_GITHUB_ENV=${{ inputs.source_github_env }}"
           echo "DEST_GITHUB_ENV=${{ inputs.dest_github_env }}"
-          cat <<EOT
+          yq -p=json <<EOT
           ${{ toJSON(env) }}
           EOT
           echo "SOURCE_REGISTRY=$SOURCE_REGISTRY"
