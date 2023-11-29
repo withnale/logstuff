@@ -67,7 +67,6 @@ jobs:
 
   build:
     needs: [version]
-    uses: ./.github/workflows/execute-command.yaml
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
