@@ -1,0 +1,106 @@
+
+on:
+  workflow_call:
+    inputs:
+      stage-dev:
+        required: false
+        type: string
+        default: ${{ vars.STAGE_DEV }}
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+      pre-targets:
+        description: |
+          Make targets to run before each p2p command
+        required: false
+        type: string
+        default: ''
+      post-targets:
+        description: |
+          Make targets to run after each p2p command
+        required: false
+        type: string
+        default: ''
+    outputs:
+      image_tag:
+        value: ${{ jobs.version.outputs.image_tag }}
+      semver:
+        value: ${{ jobs.version.outputs.semver }}
+
+env:
+  REGION: europe-west2
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    env:
+      USE_SEMVER_AS_IMAGE_TAG: true
+    outputs:
+      image_tag: ${{ steps.version.outputs.image_tag }}
+      semver: ${{ steps.version.outputs.semver }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # fetch-tags is currently broken so we need fetch them manually in the
+          # next step
+          fetch-tags: true
+
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          git fetch --prune --unshallow --tags
+          DESCRIBE="$(git describe --match 'prefix_*' --abbrev=7)"
+          CLEANED_DESCRIBE="$(echo $DESCRIBE | tr '-' '.')"
+          IMAGE_TAG="$(echo $DESCRIBE | sed 's/prefix_/v/')"
+          SEMVER="${CLEANED_DESCRIBE:7:-9}"
+          echo "DESCRIBE=$DESCRIBE CLEANED_DESCRIBE=$CLEANED_DESCRIBE"
+          echo "IMAGE_TAG=$IMAGE_TAG SEMVER=$SEMVER"
+          echo "semver=$SEMVER" >> $GITHUB_OUTPUT
+          if [[ "$USE_SEMVER_AS_IMAGE_TAG" == "true" ]]; then
+            echo "image_tag=$SEMVER" >> $GITHUB_OUTPUT
+          else
+            echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: [version]
+    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    strategy:
+      matrix: ${{ fromJSON(inputs.stage-dev) }}
+      fail-fast: false
+    with:
+      command: p2p-build
+      github_env: ${{ matrix.deploy_env }}
+      tag: ${{ needs.version.outputs.image_tag }}
+      semver: ${{ needs.version.outputs.semver }}
+
+  functional-test:
+    needs: [version, build]
+    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    strategy:
+      matrix: ${{ fromJSON(inputs.stage-dev) }}
+      fail-fast: false
+    with:
+      command: p2p-functional
+      github_env: ${{ matrix.deploy_env }}
+      tag: ${{ needs.version.outputs.image_tag }}
+      semver: ${{ needs.version.outputs.semver }}
+
+
+  nft-test:
+    needs: [version, functional-test]
+    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    strategy:
+      matrix: ${{ fromJSON(inputs.stage-dev) }}
+      fail-fast: false
+    with:
+      command: p2p-nft
+      github_env: ${{ matrix.deploy_env }}
+      tag: ${{ needs.version.outputs.image_tag }}
+      semver: ${{ needs.version.outputs.semver }}
+
+
+

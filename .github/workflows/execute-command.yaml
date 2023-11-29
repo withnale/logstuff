@@ -8,6 +8,38 @@ on:
         required: false
         type: string
         default: ''
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+      region:
+        required: false
+        type: string
+        default: europe-west2
+      tag:
+        required: false
+        type: string
+        default: ''
+      semver:
+        required: false
+        type: string
+        default: ''
+      zone:
+        required: false
+        type: string
+        default: europe-west2-a
+      pre-targets:
+        description: |
+          Make targets to run before the command
+        required: false
+        type: string
+        default: ''
+      post-targets:
+        description: |
+          Make targets to run after the command
+        required: false
+        type: string
+        default: ''
 
 
 jobs:
@@ -16,7 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.github_env }}
     env:
-      REGISTRY: ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
+      TAG_VERSION: ${{ inputs.tag }}
+      SEMVER: ${{ inputs.semver }}
+      REGION: ${{ inputs.region }}
+      REGISTRY: ${{ inputs.region }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
       SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
       WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
       BASE_URL: ${{ vars.BASE_URL }}
@@ -34,6 +69,8 @@ jobs:
           echo "ALL_VARS=$ALL_VARS"
       - name: print
         run: |
+          echo "TAG_VERSION=$TAG_VERSION"
+          echo "SEMVER=$SEMVER"
           echo "BASE_URL=$BASE_URL"
           echo "PROJECT_ID=$PROJECT_ID"
           echo "REGION=$REGION"
@@ -43,4 +80,3 @@ jobs:
           echo "PROJECT_NUMBER=$PROJECT_NUMBER"
           echo "TENANT_NAME=$TENANT_NAME"
           echo "ENV=$ENVIRONMENT"
-

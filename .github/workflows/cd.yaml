@@ -1,0 +1,21 @@
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  fastfeedback:
+    uses: ./.github/workflows/external-workflow-fastfeedback.yaml
+
+  extendedtests:
+    uses: ./.github/workflows/external-workflow-exttests.yaml
+    needs: [fastfeedback]
+    with:
+      tag: ${{ needs.fastfeedback.outputs.tag }}
+      semver: ${{ needs.fastfeedback.outputs.semver }}
+#  prod:
+#    uses: ./.github/workflows/external-workflow-prod.yaml

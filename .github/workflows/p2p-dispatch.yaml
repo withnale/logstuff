@@ -1,0 +1,25 @@
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage-dev:
+        required: true
+        type: string
+      runsteps:
+        required: false
+        type: string
+        default: 'fastfeedback,extendedtests,prod'
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  fastfeedback:
+    if: contains(github.event.inputs.runsteps, 'fastfeedback')
+    uses: ./.github/workflows/external-workflow-fastfeedback.yaml
+#  extendedtests:
+#    uses: ./.github/workflows/p2p-workflow-definition.yaml
+#    if: contains(github.event.inputs.runsteps, 'extendedtests')
+#  prod:
+#    uses: ./.github/workflows/p2p-workflow-definition.yaml
+#    if: contains(github.event.inputs.runsteps, 'extendedtests')

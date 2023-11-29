@@ -1,0 +1,78 @@
+
+on:
+  workflow_call:
+    inputs:
+      stage-dev:
+        required: false
+        type: string
+        default: ${{ vars.STAGE_DEV }}
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+      tag:
+        required: false
+        type: string
+        default: ''
+      semver:
+        required: false
+        type: string
+        default: ''
+      pre-targets:
+        description: |
+          Make targets to run before each p2p command
+        required: false
+        type: string
+        default: ''
+      post-targets:
+        description: |
+          Make targets to run after each p2p command
+        required: false
+        type: string
+        default: ''
+
+env:
+  REGION: europe-west2
+
+jobs:
+  promote-pre-extended-tests:
+    name: promote-extended-tests
+    #if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/external-promote-image.yaml
+    with:
+      source_github_env: ${{ vars.PRIMARY_DEV }}
+      dest_github_env: ${{ vars.PRIMARY_PROD }}
+      promotion-stage: extended-tests
+      tag: ${{ inputs.tag }}
+      semver: ${{ inputs.semver }}
+
+
+  run-tests:
+    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    needs: [promote-pre-extended-tests]
+    with:
+      command: p2p-extended-tests
+      envmatrix: ${{ vars.STAGE_DEV }}
+      tag: ${{ inputs.tag }}
+      semver: ${{ inputs.semver }}
+
+  dev-deploy:
+    name: dev-deploy
+    #if: github.ref == 'refs/heads/main'
+    needs: [run-tests]
+    uses: ./.github/workflows/envmatrix-execute-command.yaml
+    with:
+      command: p2p-dev
+      envmatrix: ${{ inputs.stage-dev }}
+      tag: ${{ needs.version.outputs.image_tag }}
+      semver: ${{ needs.version.outputs.semver }}
+
+  promote-post-extended-tests:
+    uses: ./.github/workflows/external-promote-image.yaml
+    needs: [run-tests]
+    with:
+      source_github_env: ${{ vars.PRIMARY_DEV }}
+      dest_github_env: ${{ vars.PRIMARY_PROD }}
+      promotion-stage: prod
+      tag: ${{ inputs.tag }}
+      semver: ${{ inputs.semver }}
