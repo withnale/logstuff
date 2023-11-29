@@ -74,7 +74,7 @@ jobs:
     steps:
         - uses: actions/checkout@v4
         - name: execute-command
-          uses: actions/execute-command
+          uses: actions/execute-command@v1
           with:
             command: p2p-build
             github_env: ${{ matrix.deploy_env }}
