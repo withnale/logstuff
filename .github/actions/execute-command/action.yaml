@@ -41,20 +41,6 @@ inputs:
 
 
 environment: ${{ inputs.github_env }}
-env:
-  TAG_VERSION: ${{ inputs.tag }}
-  SEMVER: ${{ inputs.semver }}
-  REGION: ${{ inputs.region }}
-  REGISTRY: ${{ inputs.region }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
-  SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
-  WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
-  BASE_URL: ${{ vars.BASE_URL }}
-  ENVIRONMENT: ${{ vars.ENV }}
-  ENV: ${{ vars.ENV }}
-  PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
-  PROJECT_ID: ${{ vars.PROJECT_ID }}
-  TENANT_NAME: ${{ vars.TENANT_NAME }}
-  ADDITIONAL_ENV_VARS: "FOO,BAR"
 runs:
   using: 'composite'
   steps:
