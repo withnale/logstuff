@@ -77,7 +77,7 @@ jobs:
       command: p2p-build
       github_env: ${{ matrix.deploy_env }}
       tag: ${{ needs.version.outputs.image_tag }}
-      semver: ${{  }}
+      semver: ${{ needs.version.outputs.semver }}
 
   functional-test:
     needs: [version, build]
