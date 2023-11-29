@@ -35,6 +35,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     env:
+      GETME: ${{ vars.GETME || 'default' }}
       USE_SEMVER_AS_IMAGE_TAG: true
     outputs:
       image_tag: ${{ steps.version.outputs.image_tag }}
@@ -51,6 +52,7 @@ jobs:
         id: version
         shell: bash
         run: |
+          echo "GETME=$GETME"
           git fetch --prune --unshallow --tags
           DESCRIBE="$(git describe --match 'prefix_*' --abbrev=7)"
           CLEANED_DESCRIBE="$(echo $DESCRIBE | tr '-' '.')"
@@ -67,20 +69,15 @@ jobs:
 
   build:
     needs: [version]
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/execute-command.yaml
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
-    environment: ${{ matrix.deploy_env }}
-    steps:
-        - uses: actions/checkout@v4
-        - name: execute-command
-          uses: ./.github/actions/execute-command
-          with:
-            command: p2p-build
-            github_env: ${{ matrix.deploy_env }}
-            tag: ${{ needs.version.outputs.image_tag }}
-            semver: ${{ needs.version.outputs.semver }}
+    with:
+      command: p2p-build
+      github_env: ${{ matrix.deploy_env }}
+      tag: ${{ needs.version.outputs.image_tag }}
+      semver: ${{  }}
 
   functional-test:
     needs: [version, build]
