@@ -67,6 +67,7 @@ jobs:
 
   build:
     needs: [version]
+    runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(inputs.stage-dev) }}
       fail-fast: false
