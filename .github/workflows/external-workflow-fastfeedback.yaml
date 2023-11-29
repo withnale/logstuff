@@ -68,6 +68,7 @@ jobs:
           fi
 
   build:
+    name: build
     needs: [version]
     uses: ./.github/workflows/execute-command.yaml
     strategy:
@@ -80,6 +81,7 @@ jobs:
       semver: ${{ needs.version.outputs.semver }}
 
   functional-test:
+    name: functional-test
     needs: [version, build]
     uses: ./.github/workflows/execute-command.yaml
     strategy:
