@@ -44,7 +44,7 @@ environment: ${{ inputs.github_env }}
 runs:
   using: 'composite'
   steps:
-    - run |
+    - run: |
         echo "TAG_VERSION=${{ inputs.tag }}" >> $GITHUB_ENV
         echo "SEMVER=${{ inputs.semver }}" >> $GITHUB_ENV
         echo "REGION=${{ inputs.region }}" >> $GITHUB_ENV
@@ -59,11 +59,6 @@ runs:
         echo "TENANT_NAME=${{ vars.TENANT_NAME }}" >> $GITHUB_ENV
         echo "ADDITIONAL_ENV_VARS=FOO,BAR" >> $GITHUB_ENV
 
-    - name: add_additional_env_vars
-      env:
-        ALL_VARS: ${{ toJSON(vars) }}"
-      run: |
-        echo "ALL_VARS=$ALL_VARS"
     - name: print
       run: |
         echo "TAG_VERSION=$TAG_VERSION"
