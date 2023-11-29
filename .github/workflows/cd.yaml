@@ -10,10 +10,11 @@ permissions:
 jobs:
   fastfeedback:
     uses: ./.github/workflows/external-workflow-fastfeedback.yaml
+    concurrency: ${{ github.run_id }}
 
   extendedtests:
     uses: ./.github/workflows/external-workflow-exttests.yaml
-    needs: [fastfeedback]
+    concurrency: ${{ github.run_id }}
     with:
       image_tag: ${{ needs.fastfeedback.outputs.image_tag }}
       semver: ${{ needs.fastfeedback.outputs.semver }}
