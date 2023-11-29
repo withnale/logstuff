@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/external-workflow-exttests.yaml
     needs: [fastfeedback]
     with:
-      tag: ${{ needs.fastfeedback.outputs.tag }}
+      image_tag: ${{ needs.fastfeedback.outputs.image_tag }}
       semver: ${{ needs.fastfeedback.outputs.semver }}
 #  prod:
 #    uses: ./.github/workflows/external-workflow-prod.yaml

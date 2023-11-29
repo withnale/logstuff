@@ -68,24 +68,18 @@ jobs:
   build:
     needs: [version]
     uses: ./.github/workflows/envmatrix-execute-command.yaml
-    strategy:
-      matrix: ${{ fromJSON(inputs.stage-dev) }}
-      fail-fast: false
     with:
       command: p2p-build
-      github_env: ${{ matrix.deploy_env }}
+      envmatrix: ${{ inputs.stage-dev }}
       tag: ${{ needs.version.outputs.image_tag }}
       semver: ${{ needs.version.outputs.semver }}
 
   functional-test:
     needs: [version, build]
     uses: ./.github/workflows/envmatrix-execute-command.yaml
-    strategy:
-      matrix: ${{ fromJSON(inputs.stage-dev) }}
-      fail-fast: false
     with:
       command: p2p-functional
-      github_env: ${{ matrix.deploy_env }}
+      envmatrix: ${{ inputs.stage-dev }}
       tag: ${{ needs.version.outputs.image_tag }}
       semver: ${{ needs.version.outputs.semver }}
 
@@ -93,12 +87,9 @@ jobs:
   nft-test:
     needs: [version, functional-test]
     uses: ./.github/workflows/envmatrix-execute-command.yaml
-    strategy:
-      matrix: ${{ fromJSON(inputs.stage-dev) }}
-      fail-fast: false
     with:
       command: p2p-nft
-      github_env: ${{ matrix.deploy_env }}
+      envmatrix: ${{ inputs.stage-dev }}
       tag: ${{ needs.version.outputs.image_tag }}
       semver: ${{ needs.version.outputs.semver }}
 

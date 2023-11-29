@@ -10,7 +10,7 @@ on:
         required: false
         type: boolean
         default: false
-      tag:
+      image_tag:
         required: false
         type: string
         default: ''
@@ -43,7 +43,7 @@ jobs:
       source_github_env: ${{ vars.PRIMARY_DEV }}
       dest_github_env: ${{ vars.PRIMARY_PROD }}
       promotion-stage: extended-tests
-      tag: ${{ inputs.tag }}
+      tag: ${{ inputs.image_tag }}
       semver: ${{ inputs.semver }}
 
 
@@ -53,7 +53,7 @@ jobs:
     with:
       command: p2p-extended-tests
       envmatrix: ${{ vars.STAGE_DEV }}
-      tag: ${{ inputs.tag }}
+      tag: ${{ inputs.image_tag }}
       semver: ${{ inputs.semver }}
 
   dev-deploy:
@@ -64,7 +64,7 @@ jobs:
     with:
       command: p2p-dev
       envmatrix: ${{ inputs.stage-dev }}
-      tag: ${{ needs.version.outputs.image_tag }}
+      tag: ${{ inputs.image_tag }}
       semver: ${{ needs.version.outputs.semver }}
 
   promote-post-extended-tests:
@@ -74,5 +74,5 @@ jobs:
       source_github_env: ${{ vars.PRIMARY_DEV }}
       dest_github_env: ${{ vars.PRIMARY_PROD }}
       promotion-stage: prod
-      tag: ${{ inputs.tag }}
+      tag: ${{ inputs.image_tag }}
       semver: ${{ inputs.semver }}
