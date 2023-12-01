@@ -8,14 +8,25 @@ permissions:
   id-token: write
 
 jobs:
-  fastfeedback:
-    uses: ./.github/workflows/external-workflow-fastfeedback.yaml
-
-  extendedtests:
-    uses: ./.github/workflows/external-workflow-exttests.yaml
-    needs: [fastfeedback]
-    with:
-      image_tag: ${{ needs.fastfeedback.outputs.image_tag }}
-      semver: ${{ needs.fastfeedback.outputs.semver }}
-#  prod:
-#    uses: ./.github/workflows/external-workflow-prod.yaml
+  version:
+    runs-on: ubuntu-latest
+    env:
+      USE_SEMVER_AS_IMAGE_TAG: true
+      FOO: ${{ var.STAGE_DEV }}
+    steps:
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          echo "STAGE_DEV=$STAGE_DEV"
+#  fastfeedback:
+#    uses: ./.github/workflows/external-workflow-fastfeedback.yaml
+#
+#  extendedtests:
+#    uses: ./.github/workflows/external-workflow-exttests.yaml
+#    needs: [fastfeedback]
+#    with:
+#      image_tag: ${{ needs.fastfeedback.outputs.image_tag }}
+#      semver: ${{ needs.fastfeedback.outputs.semver }}
+##  prod:
+##    uses: ./.github/workflows/external-workflow-prod.yaml
