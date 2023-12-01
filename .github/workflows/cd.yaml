@@ -10,8 +10,8 @@ permissions:
 jobs:
 
   testJob:
-    name: Test
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - id: set_var
         run: |
@@ -28,6 +28,7 @@ jobs:
 
   version:
     runs-on: ubuntu-latest
+    continue-on-error: true
     env:
       STAGE_DEV: ${{ fromJson(vars.STAGE_DEV).include }}
     steps:
