@@ -5,9 +5,23 @@ on:
     types: [opened, synchronize, labeled, unlabeled]
 
 jobs:
-  fastfeedback:
-    uses: ./.github/workflows/p2p-workflow-definition.yaml
-  extendedtests:
-    uses: ./.github/workflows/p2p-workflow-definition.yaml
-  prod:
-    uses: ./.github/workflows/p2p-workflow-definition.yaml
+
+  version:
+    runs-on: ubuntu-latest
+    env:
+      USE_SEMVER_AS_IMAGE_TAG: true
+      FOO: ${{ var.STAGE_DEV }}
+    steps:
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          echo "STAGE_DEV=$STAGE_DEV"
+
+
+#  fastfeedback:
+#    uses: ./.github/workflows/p2p-workflow-definition.yaml
+#  extendedtests:
+#    uses: ./.github/workflows/p2p-workflow-definition.yaml
+#  prod:
+#    uses: ./.github/workflows/p2p-workflow-definition.yaml
