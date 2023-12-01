@@ -44,7 +44,7 @@ jobs:
         #  STAGE_DEV: ${{ fromJson(vars.STAGE_DEV).include }}
         shell: bash
         run: |
-          echo "STAGE_DEV=${{ fromJson(vars.STAGE_DEV).include[0] }}"
+          echo "STAGE_DEV=${{ fromJson(vars.STAGE_DEV).include[0]['deploy_env'] }}"
 #  fastfeedback:
 #    uses: ./.github/workflows/external-workflow-fastfeedback.yaml
 #
