@@ -11,7 +11,7 @@ jobs:
   version:
     runs-on: ubuntu-latest
     env:
-      STAGE_DEV: ${{ (fromJson(vars.STAGE_DEV)).include }}
+      STAGE_DEV: ${{ fromJson(vars.STAGE_DEV).include }}
     steps:
       - name: Get version
         shell: bash
