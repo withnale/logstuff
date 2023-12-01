@@ -1,0 +1,169 @@
+name: p2p-command
+
+on:
+  workflow_call:
+    secrets:
+      env_vars:
+        required: false
+    inputs:
+      promotion-stage:
+        required: true
+        type: string
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+      source_github_env:
+        required: true
+        type: string
+      dest_github_env:
+        required: true
+        type: string
+      tag:
+        required: false
+        type: string
+        default: ''
+      semver:
+        required: false
+        type: string
+        default: ''
+      region:
+        required: false
+        type: string
+        default: europe-west2
+      pre-targets:
+        description: |
+          Make targets to run before the command
+        required: false
+        type: string
+        default: ''
+      post-targets:
+        description: |
+          Make targets to run after the command
+        required: false
+        type: string
+        default: ''
+
+
+jobs:
+  lookup:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.source_github_env }}
+    env:
+      REGISTRY: ${{ inputs.region }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
+      SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
+      WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
+    outputs:
+      source_registry: ${{ env.REGISTRY }}
+      source_service_account: ${{ env.SERVICE_ACCOUNT }}
+      source_workflow_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+    steps:
+      - run: echo "dummy command"
+
+  promote-image:
+    name: promote-${{ inputs.promotion-stage }}
+    runs-on: ubuntu-latest
+    needs: [lookup]
+    environment: ${{ inputs.dest_github_env }}
+    env:
+      TAG_VERSION: ${{ inputs.tag }}
+      SEMVER: ${{ inputs.semver }}
+      SOURCE_REGISTRY: ${{ needs.lookup.outputs.source_registry }}
+      SOURCE_SERVICE_ACCOUNT: ${{ needs.lookup.outputs.source_service_account }}
+      SOURCE_WORKLOAD_IDENTITY_PROVIDER: ${{ needs.lookup.outputs.source_workflow_identity_provider }}
+
+      REGION: ${{ inputs.region }}
+      REGISTRY: ${{ inputs.region }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant
+      SERVICE_ACCOUNT: p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
+      WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}
+      BASE_URL: ${{ vars.BASE_URL }}
+      ENVIRONMENT: ${{ vars.ENV }}
+      ENV: ${{ vars.ENV }}
+      PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+      PROJECT_ID: ${{ vars.PROJECT_ID }}
+      TENANT_NAME: ${{ vars.TENANT_NAME }}
+      ADDITIONAL_ENV_VARS: "FOO,BAR"
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: print
+        run: |
+          echo "SOURCE_GITHUB_ENV=${{ inputs.source_github_env }}"
+          echo "DEST_GITHUB_ENV=${{ inputs.dest_github_env }}"
+          yq -p=json <<EOT
+          ${{ toJSON(env) }}
+          EOT
+          echo "SOURCE_REGISTRY=$SOURCE_REGISTRY"
+          echo "SOURCE_SERVICE_ACCOUNT=$SOURCE_SERVICE_ACCOUNT"
+          echo "SOURCE_WORKLOAD_IDENTITY_PROVIDER=$SOURCE_WORKLOAD_IDENTITY_PROVIDER"
+          echo "BASE_URL=$BASE_URL"
+          echo "PROJECT_ID=$PROJECT_ID"
+          echo "REGION=$REGION"
+          echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT"
+          echo "WORKLOAD_IDENTITY_PROVIDER=$WORKLOAD_IDENTITY_PROVIDER"
+          echo "REGISTRY=$REGISTRY"
+          echo "PROJECT_NUMBER=$PROJECT_NUMBER"
+          echo "TENANT_NAME=$TENANT_NAME"
+          echo "ENV=$ENVIRONMENT"
+          echo "TAG_VERSION=$TAG_VERSION"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud (Source)
+        id: auth-dev
+        if: inputs.dry-run == false
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ env.SOURCE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SOURCE_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_lifetime: 600s
+    
+      - name: Login to Artifact Registry
+        uses: docker/login-action@v2
+        if: inputs.dry-run == false
+        with:
+          registry: europe-west2-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth-dev.outputs.access_token }}
+
+      - name: Check if prepare promotion task exists
+        id: run-check-prepare-promotion
+        run: |
+          make
+          echo "prepare_promotion_task=$(make | grep -E 'p2p-prepare-promotion-${{ inputs.promotion-stage }}')" >> $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
+
+      - name: Run Prepare Promotion
+        if: steps.run-check-prepare-promotion.outputs.prepare_promotion_task  != ''
+        id: run-prepare-promotion
+        run: |
+          make p2p-prepare-promotion-${{ inputs.promotion-stage }}
+          
+
+      - name: Authenticate to Google Cloud (Dest))
+        id: auth-prod
+        if: inputs.dry-run == false && inputs.promotion-stage == 'prod'
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_lifetime: 600s
+    
+      - name: Login to Artifact Registry Prod
+        uses: docker/login-action@v2
+        if: inputs.dry-run == false && inputs.promotion-stage == 'prod'
+        with:
+          registry: europe-west2-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth-prod.outputs.access_token }}
+
+      - name: Run Promotion
+        id: run-promotion
+        run: |
+          make p2p-promote-${{ inputs.promotion-stage }}
+      

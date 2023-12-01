@@ -1,0 +1,80 @@
+name: foo
+
+inputs:
+  command:
+    required: true
+    type: string
+  github_env:
+    required: false
+    type: string
+    default: ''
+  dry-run:
+    required: false
+    type: boolean
+    default: false
+  region:
+    required: false
+    type: string
+    default: europe-west2
+  tag:
+    required: false
+    type: string
+    default: ''
+  semver:
+    required: false
+    type: string
+    default: ''
+  zone:
+    required: false
+    type: string
+    default: europe-west2-a
+  pre-targets:
+    description: |
+      Make targets to run before the command
+    required: false
+    type: string
+    default: ''
+  post-targets:
+    description: |
+      Make targets to run after the command
+    required: false
+    type: string
+    default: ''
+
+
+
+
+
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        echo "TAG_VERSION=${{ inputs.tag }}" >> $GITHUB_ENV
+        echo "SEMVER=${{ inputs.semver }}" >> $GITHUB_ENV
+        echo "REGION=${{ inputs.region }}" >> $GITHUB_ENV
+        echo "REGISTRY=${{ inputs.region }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/tenant" >> $GITHUB_ENV
+        echo "SERVICE_ACCOUNT=p2p-${{ vars.TENANT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com" >> $GITHUB_ENV
+        echo "WORKLOAD_IDENTITY_PROVIDER=projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ vars.TENANT_NAME }}/providers/p2p-${{ vars.TENANT_NAME }}" >> $GITHUB_ENV
+        echo "BASE_URL=${{ vars.BASE_URL }}" >> $GITHUB_ENV
+        echo "ENVIRONMENT=${{ vars.ENV }}" >> $GITHUB_ENV
+        echo "ENV=${{ vars.ENV }}" >> $GITHUB_ENV
+        echo "PROJECT_NUMBER=${{ vars.PROJECT_NUMBER }}" >> $GITHUB_ENV
+        echo "PROJECT_ID=${{ vars.PROJECT_ID }}" >> $GITHUB_ENV
+        echo "TENANT_NAME=${{ vars.TENANT_NAME }}" >> $GITHUB_ENV
+        echo "ADDITIONAL_ENV_VARS=FOO,BAR" >> $GITHUB_ENV
+
+    - shell: bash
+      run: |
+        echo "TAG_VERSION=$TAG_VERSION"
+        echo "SEMVER=$SEMVER"
+        echo "BASE_URL=$BASE_URL"
+        echo "PROJECT_ID=$PROJECT_ID"
+        echo "REGION=$REGION"
+        echo "SERVICE_ACCOUNT=$SERVICE_ACCOUNT"
+        echo "WORKLOAD_IDENTITY_PROVIDER=$WORKLOAD_IDENTITY_PROVIDER"
+        echo "REGISTRY=$REGISTRY"
+        echo "PROJECT_NUMBER=$PROJECT_NUMBER"
+        echo "TENANT_NAME=$TENANT_NAME"
+        echo "ENV=$ENVIRONMENT"
