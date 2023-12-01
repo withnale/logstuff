@@ -40,11 +40,11 @@ jobs:
           echo "STAGE_DEV=$STAGE_DEV"
 
       - name: Get version2
-        env:
-          STAGE_DEV: ${{ fromJson(vars.STAGE_DEV).include }}
+        #env:
+        #  STAGE_DEV: ${{ fromJson(vars.STAGE_DEV).include }}
         shell: bash
         run: |
-          echo "STAGE_DEV=$STAGE_DEV"
+          echo "STAGE_DEV=${{ fromJson(vars.STAGE_DEV).include }}"
 #  fastfeedback:
 #    uses: ./.github/workflows/external-workflow-fastfeedback.yaml
 #
