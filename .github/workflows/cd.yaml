@@ -31,10 +31,17 @@ jobs:
   version:
     runs-on: ubuntu-latest
     continue-on-error: true
-    env:
-      STAGE_DEV: ${{ fromJson(vars.STAGE_DEV).include }}
     steps:
-      - name: Get version
+      - name: Get version1
+        env:
+          STAGE_DEV: ${{ vars.STAGE_DEV }}
+        shell: bash
+        run: |
+          echo "STAGE_DEV=$STAGE_DEV"
+
+      - name: Get version2
+        env:
+          STAGE_DEV: ${{ fromJson(vars.STAGE_DEV).include }}
         shell: bash
         run: |
           echo "STAGE_DEV=$STAGE_DEV"
