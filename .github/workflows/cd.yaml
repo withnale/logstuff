@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       USE_SEMVER_AS_IMAGE_TAG: true
-      FOO: ${{ var.STAGE_DEV }}
+      FOO: ${{ vars.STAGE_DEV }}
     steps:
       - name: Get version
         id: version
